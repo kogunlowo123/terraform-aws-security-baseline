@@ -17,6 +17,62 @@ This module deploys and configures the following AWS security services:
 | **Amazon Detective** | Security investigation and root cause analysis |
 | **IAM Password Policy** | Enforces strong password requirements |
 
+### Component Diagram
+
+```mermaid
+flowchart TB
+    subgraph ThreatDetection["Threat Detection"]
+        GD["Amazon GuardDuty\n(S3, EKS, Malware)"]
+        DET["Amazon Detective\n(Investigation)"]
+    end
+
+    subgraph Compliance["Compliance & Monitoring"]
+        SH["AWS Security Hub\n(CIS, FSBP)"]
+        CFG["AWS Config\n(Resource Compliance)"]
+    end
+
+    subgraph Logging["Audit & Logging"]
+        CT["AWS CloudTrail\n(API Logging / KMS)"]
+        CW["CloudWatch\n(Log Group)"]
+    end
+
+    subgraph DataProtection["Data Protection"]
+        MAC["Amazon Macie\n(S3 Sensitive Data)"]
+        AA["IAM Access Analyzer\n(External Access)"]
+    end
+
+    subgraph IAMHardening["IAM Hardening"]
+        PP["Password Policy\n(CIS Controls)"]
+        BG["Break-Glass User"]
+        AR["Audit Roles"]
+    end
+
+    GD --> SH
+    CFG --> SH
+    CT --> CW
+    CT --> SH
+    MAC --> SH
+    AA --> SH
+    DET --> GD
+
+    style ThreatDetection fill:#DD344C,stroke:#DD344C,color:#fff
+    style Compliance fill:#FF9900,stroke:#FF9900,color:#fff
+    style Logging fill:#3F8624,stroke:#3F8624,color:#fff
+    style DataProtection fill:#1A73E8,stroke:#1A73E8,color:#fff
+    style IAMHardening fill:#8C4FFF,stroke:#8C4FFF,color:#fff
+    style GD fill:#DD344C,stroke:#b02a3d,color:#fff
+    style DET fill:#DD344C,stroke:#b02a3d,color:#fff
+    style SH fill:#FF9900,stroke:#cc7a00,color:#fff
+    style CFG fill:#FF9900,stroke:#cc7a00,color:#fff
+    style CT fill:#3F8624,stroke:#2d6119,color:#fff
+    style CW fill:#3F8624,stroke:#2d6119,color:#fff
+    style MAC fill:#1A73E8,stroke:#1459b3,color:#fff
+    style AA fill:#1A73E8,stroke:#1459b3,color:#fff
+    style PP fill:#8C4FFF,stroke:#6b3dcc,color:#fff
+    style BG fill:#8C4FFF,stroke:#6b3dcc,color:#fff
+    style AR fill:#8C4FFF,stroke:#6b3dcc,color:#fff
+```
+
 ## Usage
 
 ### Single Account Baseline
