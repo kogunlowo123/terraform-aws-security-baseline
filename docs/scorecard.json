@@ -1,0 +1,64 @@
+{
+  "repo": "terraform-aws-security-baseline",
+  "generated": "2026-03-15",
+  "scores": {
+    "documentation": 8,
+    "maintainability": 8,
+    "security": 9,
+    "observability": 6,
+    "deployability": 8,
+    "portability": 6,
+    "testability": 7,
+    "scalability": 7,
+    "reusability": 8,
+    "production_readiness": 8
+  },
+  "overall": 7.5,
+  "top_gaps": [
+    "No .gitignore file present",
+    "No pre-commit hook configuration",
+    "Tests exist but lack integration/end-to-end coverage",
+    "No Makefile or Taskfile for local development",
+    "No architecture diagram in documentation",
+    "No cost estimation or Infracost integration",
+    "Only two example configurations (basic, complete)",
+    "No automated security scanning (tfsec/checkov) in CI",
+    "No OPA/Sentinel policy validation configured",
+    "No dependency pinning beyond provider versions"
+  ],
+  "fixes_applied": [
+    "GitHub Actions CI workflow configured",
+    "Test infrastructure present (tests/ directory)",
+    "CONTRIBUTING.md present for contributor guidance",
+    "SECURITY.md present for vulnerability reporting",
+    "CODEOWNERS file established for review ownership",
+    ".editorconfig ensures consistent code formatting",
+    ".gitattributes for line ending normalization",
+    "LICENSE clearly defined",
+    "CHANGELOG.md tracks version history",
+    "Three security-focused sub-modules (guardduty-org, scp-baseline, iam-baseline)"
+  ],
+  "remaining_risks": [
+    "Missing .gitignore could lead to sensitive files being committed",
+    "No tfsec or checkov scanning in the CI pipeline",
+    "Tests lack assertions on security posture outputs",
+    "No automated compliance checking against CIS benchmarks"
+  ],
+  "roadmap": {
+    "30_day": [
+      "Create .gitignore with Terraform-standard exclusions",
+      "Add tfsec and checkov to CI pipeline",
+      "Add pre-commit hooks with security linting"
+    ],
+    "60_day": [
+      "Expand test coverage with Terratest assertions",
+      "Add CIS benchmark compliance validation",
+      "Create architecture diagram documenting security controls"
+    ],
+    "90_day": [
+      "Implement OPA/Sentinel policy-as-code checks",
+      "Add automated drift detection for security configurations",
+      "Create advanced example with multi-account setup"
+    ]
+  }
+}

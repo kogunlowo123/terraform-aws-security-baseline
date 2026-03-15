@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>terraform-aws-security-baseline | Architecture</title>
+<style>
+:root{--ink:#0b0c0b;--ink2:#141514;--ink3:#1e1f1e;--border:#2a2b2a;--text:#c8c9c8;--text2:#9a9b9a;--accent:#c8420a;--accent2:#e05a1a;--green:#2ecc71;--blue:#3498db;--yellow:#f1c40f;--red:#e74c3c;--purple:#9b59b6;--mono:"SF Mono","Fira Code","Fira Mono","Roboto Mono",monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--ink);color:var(--text);font-family:var(--mono);font-size:14px;line-height:1.7}
+a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+header{border-bottom:1px solid var(--border);padding:32px 0}
+header h1{font-size:28px;color:#fff;font-weight:700}header h1 span{color:var(--accent)}
+header p.sub{color:var(--text2);margin-top:6px;font-size:13px}
+.badge{display:inline-block;padding:2px 10px;border-radius:3px;font-size:11px;font-weight:600;margin-right:6px;margin-top:8px}
+.badge-tf{background:#623ce4;color:#fff}.badge-aws{background:#ff9900;color:#111}.badge-mit{background:#2ecc71;color:#111}
+section{padding:40px 0;border-bottom:1px solid var(--border)}section:last-of-type{border-bottom:none}
+h2{font-size:20px;color:#fff;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+h2::before{content:"";width:4px;height:20px;background:var(--accent);display:inline-block;border-radius:2px}
+h3{font-size:15px;color:var(--accent2);margin:16px 0 10px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.card{background:var(--ink2);border:1px solid var(--border);border-radius:6px;padding:20px}
+.card h4{color:#fff;font-size:14px;margin-bottom:6px}.card p{color:var(--text2);font-size:12px}
+.card .num{font-size:24px;color:var(--accent);font-weight:700}
+.arch-diagram{background:var(--ink2);border:1px solid var(--border);border-radius:6px;padding:32px;overflow-x:auto;margin:16px 0}
+.flow{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center}
+.flow .box{background:var(--ink3);border:1px solid var(--border);border-radius:4px;padding:12px 18px;text-align:center;min-width:130px;font-size:12px;color:#fff}
+.flow .box.primary{border-color:var(--accent);background:rgba(200,66,10,0.1)}
+.flow .box.green{border-color:var(--green);background:rgba(46,204,113,0.06)}
+.flow .box.blue{border-color:var(--blue);background:rgba(52,152,219,0.06)}
+.flow .box.purple{border-color:var(--purple);background:rgba(155,89,182,0.06)}
+.flow .box.yellow{border-color:var(--yellow);background:rgba(241,196,15,0.06)}
+.flow .box.red{border-color:var(--red);background:rgba(231,76,60,0.06)}
+.flow .box small{display:block;color:var(--text2);font-size:10px;margin-top:4px}
+.flow .arrow{color:var(--accent);font-size:18px;font-weight:700}
+.flow-col{display:flex;flex-direction:column;align-items:center;gap:8px}
+.flow-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
+.arrow-down{color:var(--accent);font-size:18px}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+th{text-align:left;padding:10px 12px;background:var(--ink2);color:var(--accent2);border:1px solid var(--border);font-weight:600}
+td{padding:10px 12px;border:1px solid var(--border);color:var(--text)}
+tr:hover td{background:var(--ink2)}
+code{background:var(--ink3);padding:2px 6px;border-radius:3px;font-size:12px;color:var(--accent2)}
+pre{background:var(--ink2);border:1px solid var(--border);border-radius:6px;padding:16px;overflow-x:auto;font-size:12px;line-height:1.6;margin:12px 0}
+.checklist{list-style:none;padding:0}
+.checklist li{padding:8px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;font-size:13px}
+.checklist li::before{content:"[ ]";color:var(--accent);font-weight:700;font-size:12px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:768px){.grid-2,.cards{grid-template-columns:1fr}}
+footer{border-top:1px solid var(--border);padding:24px 0;text-align:center;color:var(--text2);font-size:11px}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+<h1><span>//</span> terraform-aws-security-baseline</h1>
+<p class="sub">Comprehensive AWS account security baseline with GuardDuty, Security Hub, AWS Config, CloudTrail, Macie, IAM Access Analyzer, Detective, and IAM hardening.</p>
+<div>
+<span class="badge badge-tf">Terraform &ge; 1.5.0</span>
+<span class="badge badge-aws">AWS &ge; 5.20.0</span>
+<span class="badge badge-mit">MIT License</span>
+</div>
+</header>
+
+<section>
+<h2>Executive Summary</h2>
+<p>This module establishes a production-grade security baseline for AWS accounts. It enables and configures eight core security services: GuardDuty for threat detection (S3, EKS, malware), Security Hub for centralized findings with CIS and FSBP standards, AWS Config for resource compliance, CloudTrail for API audit logging with KMS encryption and CloudWatch integration, Macie for sensitive data discovery, IAM Access Analyzer for external access detection, Detective for investigation, and IAM password policy enforcement. All services are toggleable and every resource follows consistent naming and tagging.</p>
+</section>
+
+<section>
+<h2>Overview</h2>
+<div class="cards">
+<div class="card"><div class="num">8</div><h4>Security Services</h4><p>GuardDuty, Security Hub, Config, CloudTrail, Macie, Access Analyzer, Detective, IAM Policy</p></div>
+<div class="card"><div class="num">6</div><h4>Compliance Frameworks</h4><p>CIS 1.4, FSBP, SOC 2, PCI DSS, HIPAA, NIST 800-53</p></div>
+<div class="card"><div class="num">3</div><h4>Sub-Modules</h4><p>guardduty-org, scp-baseline, iam-baseline</p></div>
+<div class="card"><div class="num">30+</div><h4>Input Variables</h4><p>Granular control over every security service and policy setting</p></div>
+</div>
+</section>
+
+<section>
+<h2>Architecture Diagram</h2>
+<div class="arch-diagram">
+<div class="flow-col">
+<div class="flow-row">
+<div class="box red">GuardDuty<small>S3, EKS, Malware</small></div>
+<div class="box red">Detective<small>Investigation</small></div>
+</div>
+<div class="arrow-down">&darr;</div>
+<div class="flow-row">
+<div class="box primary">Security Hub<small>CIS 1.4, FSBP</small></div>
+</div>
+<div class="arrow-down">&uarr;</div>
+<div class="flow-row">
+<div class="box yellow">AWS Config<small>Resource compliance</small></div>
+<div class="box green">CloudTrail<small>API logging + KMS</small></div>
+<div class="box blue">Macie<small>S3 sensitive data</small></div>
+<div class="box blue">Access Analyzer<small>External access</small></div>
+</div>
+<div class="arrow-down">&darr;</div>
+<div class="flow-row">
+<div class="box green">CloudWatch Logs<small>365-day retention</small></div>
+<div class="box">S3 Buckets<small>Config + CloudTrail delivery</small></div>
+<div class="box purple">KMS Key<small>CloudTrail encryption</small></div>
+</div>
+<div class="arrow-down">&darr;</div>
+<div class="flow-row">
+<div class="box purple">IAM Password Policy<small>CIS Controls</small></div>
+<div class="box purple">Break-Glass User<small>iam-baseline module</small></div>
+<div class="box purple">Audit Roles<small>iam-baseline module</small></div>
+</div>
+</div>
+</div>
+</section>
+
+<section>
+<h2>Component Breakdown</h2>
+<table>
+<tr><th>Service</th><th>Resource(s)</th><th>Purpose</th></tr>
+<tr><td>GuardDuty</td><td><code>aws_guardduty_detector</code></td><td>Continuous threat detection with S3, EKS, and malware protection</td></tr>
+<tr><td>Security Hub</td><td><code>aws_securityhub_account</code>, <code>standards_subscription</code></td><td>Centralized security findings with CIS and FSBP standards</td></tr>
+<tr><td>AWS Config</td><td><code>aws_config_configuration_recorder</code>, <code>delivery_channel</code></td><td>Resource inventory, configuration history, compliance auditing</td></tr>
+<tr><td>CloudTrail</td><td><code>aws_cloudtrail</code>, <code>aws_cloudwatch_log_group</code>, <code>aws_kms_key</code></td><td>Multi-region API logging with KMS encryption and CloudWatch integration</td></tr>
+<tr><td>Macie</td><td><code>aws_macie2_account</code></td><td>Automated sensitive data discovery in S3 buckets</td></tr>
+<tr><td>Access Analyzer</td><td><code>aws_accessanalyzer_analyzer</code></td><td>Identifies resources shared with external entities (ACCOUNT or ORGANIZATION)</td></tr>
+<tr><td>Detective</td><td><code>aws_detective_graph</code></td><td>Security investigation and root cause analysis</td></tr>
+<tr><td>IAM Password Policy</td><td><code>aws_iam_account_password_policy</code></td><td>Enforces min 14 char, symbols, numbers, 90-day max age, 24 reuse prevention</td></tr>
+</table>
+</section>
+
+<section>
+<h2>Data Flow</h2>
+<div class="arch-diagram">
+<div class="flow">
+<div class="box">API Calls</div>
+<div class="arrow">&rarr;</div>
+<div class="box green">CloudTrail</div>
+<div class="arrow">&rarr;</div>
+<div class="box green">CloudWatch Logs</div>
+<div class="arrow">&rarr;</div>
+<div class="box primary">Security Hub</div>
+<div class="arrow">&larr;</div>
+<div class="box red">GuardDuty Findings</div>
+</div>
+</div>
+<p style="margin-top:12px;color:var(--text2);font-size:13px">All security services feed findings into Security Hub for centralized visibility. CloudTrail logs are encrypted with KMS and stored in both CloudWatch and S3. Config compliance results feed into Security Hub standards checks.</p>
+</section>
+
+<section>
+<h2>Security Controls</h2>
+<div class="grid-2">
+<div class="card"><h4>Multi-Region CloudTrail</h4><p>API logging across all regions with log file integrity validation and CloudTrail Insights</p></div>
+<div class="card"><h4>KMS Encryption</h4><p>CloudTrail logs encrypted with dedicated KMS key, auto-created if not provided</p></div>
+<div class="card"><h4>CIS Benchmark 1.4</h4><p>Maps to CIS controls 1.5-1.11, 2.1-2.3, 3.1-3.7, 4.1-4.15, 5.1</p></div>
+<div class="card"><h4>IAM Hardening</h4><p>14-char minimum password, 90-day rotation, 24-password reuse prevention</p></div>
+<div class="card"><h4>Threat Intelligence</h4><p>GuardDuty S3 protection, EKS audit logs, malware scanning for EBS</p></div>
+<div class="card"><h4>Data Protection</h4><p>Macie discovers PII/sensitive data in S3, Access Analyzer detects external sharing</p></div>
+</div>
+</section>
+
+<section>
+<h2>Industry Adaptation</h2>
+<table>
+<tr><th>Framework</th><th>Coverage</th></tr>
+<tr><td>CIS AWS Foundations 1.4</td><td>Automated controls for IAM, logging, monitoring, networking</td></tr>
+<tr><td>AWS FSBP</td><td>AWS-defined security standards via Security Hub</td></tr>
+<tr><td>SOC 2 Type II</td><td>Logging, monitoring, and access control controls</td></tr>
+<tr><td>PCI DSS</td><td>Encryption, access logging, and change detection</td></tr>
+<tr><td>HIPAA</td><td>Audit logging, encryption, and access controls</td></tr>
+<tr><td>NIST 800-53</td><td>Security and privacy controls via Security Hub mapping</td></tr>
+</table>
+</section>
+
+<section>
+<h2>Production Readiness Checklist</h2>
+<ul class="checklist">
+<li>Create dedicated S3 buckets for Config and CloudTrail delivery before applying</li>
+<li>Enable all security services (defaults are true except Detective)</li>
+<li>Set <code>access_analyzer_type = "ORGANIZATION"</code> for org-wide analysis</li>
+<li>Enable <code>cloudtrail_enable_insights</code> for anomaly detection</li>
+<li>Review Security Hub findings weekly and remediate critical items</li>
+<li>Deploy <code>iam-baseline</code> sub-module for break-glass user and audit roles</li>
+<li>Deploy <code>scp-baseline</code> for service control policy guardrails</li>
+<li>Enable Detective for investigation capabilities</li>
+<li>Configure SNS notifications for Config changes</li>
+<li>Set up CloudWatch alarms for CIS metric filters</li>
+</ul>
+</section>
+
+<section>
+<h2>Configuration Reference</h2>
+<h3>Required Variables</h3>
+<table>
+<tr><th>Variable</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>name_prefix</code></td><td>string</td><td>Prefix for all named resources</td></tr>
+</table>
+<h3>Key Optional Variables</h3>
+<table>
+<tr><th>Variable</th><th>Default</th><th>Description</th></tr>
+<tr><td><code>enable_guardduty</code></td><td>true</td><td>Enable GuardDuty</td></tr>
+<tr><td><code>enable_security_hub</code></td><td>true</td><td>Enable Security Hub</td></tr>
+<tr><td><code>enable_config</code></td><td>true</td><td>Enable AWS Config</td></tr>
+<tr><td><code>enable_cloudtrail</code></td><td>true</td><td>Enable CloudTrail</td></tr>
+<tr><td><code>enable_macie</code></td><td>true</td><td>Enable Macie</td></tr>
+<tr><td><code>enable_access_analyzer</code></td><td>true</td><td>Enable IAM Access Analyzer</td></tr>
+<tr><td><code>enable_detective</code></td><td>false</td><td>Enable Detective</td></tr>
+<tr><td><code>enable_iam_password_policy</code></td><td>true</td><td>Configure IAM password policy</td></tr>
+<tr><td><code>password_policy_min_length</code></td><td>14</td><td>Minimum password length</td></tr>
+<tr><td><code>cloudtrail_is_multi_region</code></td><td>true</td><td>Multi-region trail</td></tr>
+</table>
+</section>
+
+<section>
+<h2>Deployment</h2>
+<pre>
+module "security_baseline" {
+  source = "kogunlowo123/security-baseline/aws"
+
+  name_prefix               = "myapp"
+  config_delivery_s3_bucket = "myapp-config-bucket"
+  cloudtrail_s3_bucket_name = "myapp-cloudtrail-bucket"
+
+  tags = {
+    Project   = "security-baseline"
+    ManagedBy = "terraform"
+  }
+}
+</pre>
+</section>
+
+<section>
+<h2>Links</h2>
+<table>
+<tr><td><a href="https://docs.aws.amazon.com/guardduty/latest/ug/what-is-guardduty.html">Amazon GuardDuty</a></td></tr>
+<tr><td><a href="https://docs.aws.amazon.com/securityhub/latest/userguide/what-is-securityhub.html">AWS Security Hub</a></td></tr>
+<tr><td><a href="https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html">AWS Config</a></td></tr>
+<tr><td><a href="https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html">AWS CloudTrail</a></td></tr>
+<tr><td><a href="https://www.cisecurity.org/benchmark/amazon_web_services">CIS AWS Foundations Benchmark</a></td></tr>
+</table>
+</section>
+
+<footer>
+<p>terraform-aws-security-baseline | Architecture Documentation | Generated 2026-03-15</p>
+</footer>
+
+</div>
+</body>
+</html>
