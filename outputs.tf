@@ -1,7 +1,3 @@
-################################################################################
-# GuardDuty
-################################################################################
-
 output "guardduty_detector_id" {
   description = "ID of the GuardDuty detector."
   value       = try(aws_guardduty_detector.this[0].id, null)
@@ -11,10 +7,6 @@ output "guardduty_detector_arn" {
   description = "ARN of the GuardDuty detector."
   value       = try(aws_guardduty_detector.this[0].arn, null)
 }
-
-################################################################################
-# Security Hub
-################################################################################
 
 output "securityhub_account_id" {
   description = "ID of the Security Hub account resource."
@@ -31,10 +23,6 @@ output "securityhub_standards_subscription_arns" {
   value       = [for s in aws_securityhub_standards_subscription.this : s.id]
 }
 
-################################################################################
-# AWS Config
-################################################################################
-
 output "config_recorder_id" {
   description = "ID of the AWS Config configuration recorder."
   value       = try(aws_config_configuration_recorder.this[0].id, null)
@@ -49,10 +37,6 @@ output "config_role_arn" {
   description = "ARN of the IAM role used by the AWS Config recorder."
   value       = try(aws_iam_role.config[0].arn, null)
 }
-
-################################################################################
-# CloudTrail
-################################################################################
 
 output "cloudtrail_id" {
   description = "Name of the CloudTrail trail."
@@ -81,7 +65,7 @@ output "cloudtrail_cloudwatch_role_arn" {
 
 output "cloudtrail_kms_key_arn" {
   description = "ARN of the KMS key used for CloudTrail encryption."
-  value       = local.cloudtrail_kms_key_arn
+  value       = var.cloudtrail_kms_key_arn != "" ? var.cloudtrail_kms_key_arn : try(aws_kms_key.cloudtrail[0].arn, null)
 }
 
 output "cloudtrail_kms_key_id" {
@@ -89,18 +73,10 @@ output "cloudtrail_kms_key_id" {
   value       = try(aws_kms_key.cloudtrail[0].key_id, null)
 }
 
-################################################################################
-# Macie
-################################################################################
-
 output "macie_account_id" {
   description = "ID of the Macie account."
   value       = try(aws_macie2_account.this[0].id, null)
 }
-
-################################################################################
-# IAM Access Analyzer
-################################################################################
 
 output "access_analyzer_id" {
   description = "ID of the IAM Access Analyzer."
@@ -112,10 +88,6 @@ output "access_analyzer_arn" {
   value       = try(aws_accessanalyzer_analyzer.this[0].arn, null)
 }
 
-################################################################################
-# Detective
-################################################################################
-
 output "detective_graph_id" {
   description = "ID of the Detective graph."
   value       = try(aws_detective_graph.this[0].id, null)
@@ -125,10 +97,6 @@ output "detective_graph_arn" {
   description = "ARN of the Detective graph."
   value       = try(aws_detective_graph.this[0].graph_arn, null)
 }
-
-################################################################################
-# IAM Password Policy
-################################################################################
 
 output "iam_password_policy_expire_passwords" {
   description = "Whether the IAM password policy requires passwords to expire."

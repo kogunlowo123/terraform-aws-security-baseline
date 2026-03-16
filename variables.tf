@@ -1,7 +1,3 @@
-################################################################################
-# General
-################################################################################
-
 variable "name_prefix" {
   description = "Prefix to apply to all named resources for identification."
   type        = string
@@ -12,10 +8,6 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
-
-################################################################################
-# GuardDuty
-################################################################################
 
 variable "enable_guardduty" {
   description = "Whether to enable Amazon GuardDuty."
@@ -41,10 +33,6 @@ variable "guardduty_malware_protection" {
   default     = true
 }
 
-################################################################################
-# Security Hub
-################################################################################
-
 variable "enable_security_hub" {
   description = "Whether to enable AWS Security Hub."
   type        = bool
@@ -59,10 +47,6 @@ variable "security_hub_standards" {
     "aws-foundational-security-best-practices/v/1.0.0",
   ]
 }
-
-################################################################################
-# AWS Config
-################################################################################
 
 variable "enable_config" {
   description = "Whether to enable AWS Config."
@@ -88,10 +72,6 @@ variable "config_all_supported_resource_types" {
   default     = true
 }
 
-################################################################################
-# CloudTrail
-################################################################################
-
 variable "enable_cloudtrail" {
   description = "Whether to enable AWS CloudTrail."
   type        = bool
@@ -105,7 +85,7 @@ variable "cloudtrail_s3_bucket_name" {
 }
 
 variable "cloudtrail_kms_key_arn" {
-  description = "ARN of the KMS key to use for CloudTrail log encryption. If not provided, a new key is created."
+  description = "ARN of the KMS key for CloudTrail log encryption; if empty a new key is created."
   type        = string
   default     = ""
 }
@@ -134,10 +114,6 @@ variable "cloudtrail_enable_insights" {
   default     = true
 }
 
-################################################################################
-# Macie
-################################################################################
-
 variable "enable_macie" {
   description = "Whether to enable Amazon Macie."
   type        = bool
@@ -154,10 +130,6 @@ variable "macie_finding_publishing_frequency" {
     error_message = "Valid values are FIFTEEN_MINUTES, ONE_HOUR, or SIX_HOURS."
   }
 }
-
-################################################################################
-# IAM Access Analyzer
-################################################################################
 
 variable "enable_access_analyzer" {
   description = "Whether to enable IAM Access Analyzer."
@@ -176,19 +148,11 @@ variable "access_analyzer_type" {
   }
 }
 
-################################################################################
-# Detective
-################################################################################
-
 variable "enable_detective" {
   description = "Whether to enable Amazon Detective."
   type        = bool
   default     = false
 }
-
-################################################################################
-# IAM Password Policy
-################################################################################
 
 variable "enable_iam_password_policy" {
   description = "Whether to configure the IAM account password policy."
@@ -233,7 +197,7 @@ variable "password_policy_max_age" {
 }
 
 variable "password_policy_reuse_prevention" {
-  description = "Number of previous passwords that IAM users are prevented from reusing."
+  description = "Number of previous passwords that users are prevented from reusing."
   type        = number
   default     = 24
 }
